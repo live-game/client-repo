@@ -1,11 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Homepage from './views/Homepage.vue'
-<<<<<<< HEAD
-import Loadpage from './views/Loadpage.vue'
-=======
- import Gamepage from './views/Gamepage.vue'
->>>>>>> 6a7dbb1b1bcdc38b7dba0431ba09f16ce7d2cdcc
 
 Vue.use(Router)
  
@@ -17,11 +12,6 @@ export default new Router({
       path: '/',
       name: 'Homepage',
       component: Homepage
-    },
-    {
-      path: '/loading',
-      name: 'Loadpage',
-      component: Loadpage
     },
     {
       path: '/about',
@@ -40,6 +30,11 @@ export default new Router({
         name: 'room',
         component: () => import('./views/Gamepage.vue')
       }]
+    },
+    {
+      path: '/loading',
+      name: 'loading',
+      component: () => import('./views/Loadpage.vue')
     }
   ]
 })

@@ -53,6 +53,8 @@
 <script>
 /* eslint-disable */
 import db from '../../googlekey.js'
+
+
 export default {
     name: 'Homepage',
     data(){
@@ -78,7 +80,6 @@ export default {
                 if(err)
                     console.log(err)
                 else
-                   console.log('data saved successfully!')            
                     db.ref('rooms/').on('value', function(snapshot) {
                         self.roomlist.length=0
                         console.log('jalan addd')
@@ -92,6 +93,10 @@ export default {
                         })
                        // updateStarCount(postElement, snapshot.val());
                     });
+                    $('#exampleModal').modal('hide')
+                    //this.$router.push({name: 'loading'})
+                    self.$router.push('/loading')
+                    
             })    
         },
         joinRoom(roomid){
@@ -123,7 +128,6 @@ export default {
 }
 
 </script>
-
 
 <style>
 /*!

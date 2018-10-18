@@ -4,7 +4,7 @@ import Homepage from './views/Homepage.vue'
 import Loadpage from './views/Loadpage.vue'
 
 Vue.use(Router)
-
+ 
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,

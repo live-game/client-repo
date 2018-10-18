@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import db from '../../config'
+import db from '../../googlekey.js'
 
 export default {
   name: 'room',

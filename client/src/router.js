@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Homepage from './views/Homepage.vue'
-import Loadpage from './views/Loadpage.vue'
 
 Vue.use(Router)
  
@@ -13,11 +12,6 @@ export default new Router({
       path: '/',
       name: 'Homepage',
       component: Homepage
-    },
-    {
-      path: '/loading',
-      name: 'Loadpage',
-      component: Loadpage
     },
     {
       path: '/about',
@@ -36,6 +30,11 @@ export default new Router({
         name: 'room',
         component: () => import('./views/Gamepage.vue')
       }]
+    },
+    {
+      path: '/loading',
+      name: 'loading',
+      component: () => import('./views/Loadpage.vue')
     }
   ]
 })

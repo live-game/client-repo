@@ -6,7 +6,7 @@
             <div class="col-lg-3 pinky">
                 <div class="list-group">
                     <div class="form-group">
-                        <button class="form-control" data-toggle="modal" data-target="#exampleModal">Add Room</button>
+                        <button class="form-control" data-toggle="modal" data-target="#exampleModal" data-backdrop="false">Add Room</button>
                     </div>
                 </div>
                 <hr>            

@@ -1,4 +1,5 @@
 <template>
+    <!-- eslint disable -->
     <div class="container">
         <div class="row">
             <!-- left section -->
@@ -52,6 +53,7 @@
 <script>
 /* eslint-disable */
 import db from '../../googlekey.js'
+import axios from 'axios'
 
 export default {
     name: 'Homepage',
@@ -69,31 +71,58 @@ export default {
         //     })
         // },
         addRoom(){
-            let self=this;
-            db.ref('rooms/').push({
-                player:{ 
-                    player1 : { 
+            let self = this;
+            axios({
+                url: 'https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple'
+            })
+            .then(data => {
+                let results = data.data.results
+                let questions = {}
+                for (let i = 1; i <= results.length; i++) {
+                    let wrong = results[i-1].incorrect_answers
+                    let correct = results[i-1].correct_answer
+                    let correctIndex = Math.ceil(Math.random() * 4) - 1
+                    let answers = []
+
+                    for (let j = 0; j < 3; j++) {
+                        answers.push(wrong[j])
+                    }
+
+                    answers.splice(correctIndex, 0, correct)
+                    questions[`question${i}`] = results[i-1].question
+                    questions[`answer${i}`] = {
+                        1: answers[0],
+                        2: answers[1],
+                        3: answers[2],
+                        4: answers[3]
+                    }
+                    questions[`true${i}`] = correctIndex + 1
+                }
+                db.ref('rooms/').push({
+                    players: { 
+                        player1 : { 
                             answeredQ: 0,
                             name: 'player1',
                             score : 0   
                         },
-                },
-                room: self.roomName
-            },function(err){
-                if(err)
-                    console.log(err)
-                else{
-                    $('#exampleModal').modal('hide')
-                    self.$router.push('/loading')
-                }
-                    
-            })    
+                    },
+                    room: self.roomName,
+                    questions: questions
+                }, function (err) {
+                    if (err)
+                        console.log(err)
+                    else {
+                        $('#exampleModal').modal('hide')
+                        self.$router.push('/loading')
+                    }
+                })
+            })
         },
         joinRoom(roomid){
-            db.ref(`rooms/${roomid}/player/player2`).set({
+            db.ref(`rooms/${roomid}/players/player2`).set({
                 answeredQ: 0,
-                name: 'player2',  
-                score : 0                          
+                name: 'player2',
+                score : 0
             });
         }
     },

@@ -131,6 +131,10 @@ export default {
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'")
         .replace(/&Eacute;/g, 'E')
+        .replace(/&ldquo;/g, '"')
+        .replace(/&rsquo;/g, "'")
+        .replace(/&rdquo;/g, '"')
+        .replace(/&hellip;/g, ' . . . ')
       return decoded
     }
   },

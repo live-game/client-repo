@@ -24,12 +24,12 @@
         </div>
         <div class="col-3"></div>
       </div>
-      <div v-else-if='winner !== -1'>
+      <div v-else-if='winner !== -1' style="margin-top: 100px">
         <h2 v-if='winner === 0'>It's a tie!</h2>
         <h2 v-else-if='winner === Number(playerNum)'>You win!</h2>
         <h2 v-else>You lose!</h2>
       </div>
-      <div v-else>
+      <div v-else style="margin-top: 100px">
         <h2>Waiting for the other player . . .</h2>
       </div>
     </div>

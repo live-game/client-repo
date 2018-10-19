@@ -98,17 +98,11 @@ export default {
         }
     },
     methods:{
-        // doDisconnet(){
-        //     db.ref('rooms/').onDisconnect().remove(function(err) {
-        //     console.log('disconnet');
-        //     })
-        // },
         addRoom(){
             let self = this;
             self.playerName =  self.nameplayer1 || 'Player1'
-            //console.log (self.playerName)
             axios({
-                url: 'https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple'
+                url: 'https://opentdb.com/api.php?amount=2&category=9&difficulty=easy&type=multiple'
             })
             .then(data => {
                 let results = data.data.results
@@ -133,29 +127,56 @@ export default {
                     }
                     questions[`true${i}`] = correctIndex + 1
                 }
-                self.currentRoom=db.ref('rooms/').push({
-                    players: { 
-                        player1 : { 
-                            answeredQ: 0,
-                            name:  self.playerName,
-                            score : 0   
-                        },
-                    },
-                    room: self.roomName,
-                    questions: questions
-                }, function (err) {
-                    if (err)
-                        console.log(err)
-                    else {                    
-                        self.$router.push('/loading')
-                        $('#closebtn').click()
+
+                axios({
+                    url: 'https://quizapi.efratsadeli.tech/questions/random',
+                    method: 'post',
+                    data: {
+                        size: 3
                     }
-                }).getKey();
-                $('#exampleModal').modal('hide')
-                this.$store.dispatch('updatePlayerNum',1)
-                this.$store.dispatch('updateRoomId',self.currentRoom)
-                this.$store.dispatch('updatePlayerName',self.playerName)
-                self.$router.push('/loading')
+                })
+                .then(results2 => {
+                    for (let k = 0; k < results2.data.data.length; k++) {
+                        questions[`question${k + 3}`] = results2.data.data[k].question
+                        questions[`answer${k + 3}`] = {
+                            1: results2.data.data[k].choices[0],
+                            2: results2.data.data[k].choices[1],
+                            3: results2.data.data[k].choices[2],
+                            4: results2.data.data[k].choices[3]
+                        }
+                        questions[`true${k + 3}`] = results2.data.data[k].answerindex
+                    }
+
+                    self.currentRoom = db.ref('rooms/').push({
+                        players: { 
+                            player1 : { 
+                                answeredQ: 0,
+                                name:  self.playerName,
+                                score : 0   
+                            },
+                        },
+                        room: self.roomName,
+                        questions: questions
+                    }, function (err) {
+                        if (err)
+                            console.log(err)
+                        else {                    
+                            self.$router.push('/loading')
+                            $('#closebtn').click()
+                        }
+                    }).getKey();
+                    $('#exampleModal').modal('hide')
+                    this.$store.dispatch('updatePlayerNum',1)
+                    this.$store.dispatch('updateRoomId',self.currentRoom)
+                    this.$store.dispatch('updatePlayerName',self.playerName)
+                    self.$router.push('/loading')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            })
+            .catch(err => {
+                console.log(err)
             })
         },
         joinRoom(roomid){           

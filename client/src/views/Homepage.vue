@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div class="row">
-
             <!-- left section -->
             <div class="col-lg-3 pinky">
                 <div class="list-group">
@@ -54,7 +53,6 @@
 /* eslint-disable */
 import db from '../../googlekey.js'
 
-
 export default {
     name: 'Homepage',
     data(){
@@ -65,53 +63,44 @@ export default {
         }
     },
     methods:{
+        // doDisconnet(){
+        //     db.ref('rooms/').onDisconnect().remove(function(err) {
+        //     console.log('disconnet');
+        //     })
+        // },
         addRoom(){
             let self=this;
             db.ref('rooms/').push({
                 player:{ 
                     player1 : { 
-                        score : 0,  
-                        name: 'player1',
-                        status: ''
+                            answeredQ: 0,
+                            name: 'player2',
+                            score : 0   
                         },
                 },
                 room: self.roomName
             },function(err){
                 if(err)
                     console.log(err)
-                else
-                    db.ref('rooms/').on('value', function(snapshot) {
-                        self.roomlist.length=0
-                        console.log('jalan addd')
-                        snapshot.forEach(detailsnapshot =>{
-                            let {room}=detailsnapshot.val()
-                            let obj = {}
-                            obj.room=room
-                            obj.roomid = detailsnapshot.key
-                            obj.detail = detailsnapshot.val()
-                            self.roomlist.push(obj)
-                        })
-                       // updateStarCount(postElement, snapshot.val());
-                    });
+                else{
                     $('#exampleModal').modal('hide')
-                    //this.$router.push({name: 'loading'})
                     self.$router.push('/loading')
+                }
                     
             })    
         },
         joinRoom(roomid){
             db.ref(`rooms/${roomid}/player/player2`).set({
-                score : 0,  
-                name: 'player2',
-                status: ''
+                answeredQ: 0,
+                name: 'player2',  
+                score : 0                          
             });
         }
     },
     created() {
         let self=this
-        console.log('created')
         db.ref('rooms/').on('value', function(snapshot) {
-            console.log('jalan')
+            //console.log(`jalan ${self.count ++}`)
             self.roomlist.length=0
             snapshot.forEach(element => {
                 let {room}=element.val()
@@ -120,10 +109,10 @@ export default {
                 obj.roomid = element.key
                 obj.detail = element.val()
                 self.roomlist.push(obj)               
-                //self.roomlist.push(room)
             });
             
-        });
+        })
+        
     }
 }
 

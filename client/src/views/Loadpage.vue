@@ -41,7 +41,7 @@ export default {
             let players= snapshot.val()         
             if(Object.keys(players).length >1){
                 console.log('masuk player 2')
-                self.$router.push('/rooms')
+                self.$router.push(`/rooms/${self.$store.state.roomId}/${self.$store.state.playerNum}`)
             }
         })       
     }
@@ -49,7 +49,7 @@ export default {
 </script>
 
 
-<style scope>
+<style scoped>
 body {
   padding: 1em;
   background: #2B3134;

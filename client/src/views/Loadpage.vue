@@ -18,6 +18,8 @@
                 <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
             </rect>
         </svg>
+        <p></p>
+        <p>Waiting for second player</p>
     </div>
 </template>
 
@@ -52,12 +54,16 @@ export default {
 <style scoped>
 body {
   padding: 1em;
-  background: #2B3134;
-  color: #777;
   text-align: center;
   font-family: "Gill sans", sans-serif;
   width: 80%;
   margin: 0 auto;
+}
+svg {
+    margin-top: 10%;
+}
+p {
+    color: aliceblue;
 }
 h1 {
   margin: 1em 0;
@@ -80,7 +86,7 @@ p {
 }
 svg path,
 svg rect {
-  fill: rgb(255, 0, 140);
+  fill: rgb(0, 153, 255);
 }
 
 </style>

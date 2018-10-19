@@ -11,7 +11,7 @@
                 </div>
                 <hr>            
                     <div class="form-group" v-for="(room, index) in roomlist" :key="index">
-                        <button @click=joinRoom(room.roomid) class="form-control">{{ 'Join' + ' ' + room.room }} </button>
+                        <button @click=joinRoom(room.roomid) class="form-control" data-toggle="modal" data-target="#joinModal" data-backdrop="false" >{{ 'Join' + ' ' + room.room }} </button>
                     </div>                   
                 <hr>
             </div>
@@ -25,7 +25,7 @@
             <!-- right section end -->
         </div>
 
-        <!-- modal -->
+        <!-- modal add room-->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -35,17 +35,45 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                <div class="modal-body">
-                    <input type="text" v-model="roomName" class="form-control" placeholder="Room name">
-                </div>
+                    <div class="modal-body">
+                        <input type="text" v-model="roomName" class="form-control" placeholder="Room name">
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Type your name below</h5>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" v-model="nameplayer1" class="form-control" placeholder="Player name">
+                    </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" id="closebtn" data-dismiss="modal">Close</button>
                         <button @click="addRoom" type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- end modal -->
+        <!-- modal join -->
+        <div class="modal fade" id="joinModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Type your name below</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" v-model="nameplayer2" class="form-control" placeholder="Player name">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button @click="joinProcess" type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal -->
+
     </div>
     
 </template>
@@ -61,8 +89,10 @@ export default {
         return{
             roomlist:[],
             countPlayer:0,
-            nameplayer1: 'player1',
-            nameplayer2: 'player2',
+            nameplayer1: '',
+            nameplayer2: '',
+            playerName: '',
+            joinIdRoom: '',
             roomName: '',
             currentRoom:''
         }
@@ -75,6 +105,8 @@ export default {
         // },
         addRoom(){
             let self = this;
+            self.playerName =  self.nameplayer1 || 'Player1'
+            //console.log (self.playerName)
             axios({
                 url: 'https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple'
             })
@@ -105,7 +137,7 @@ export default {
                     players: { 
                         player1 : { 
                             answeredQ: 0,
-                            name:  self.nameplayer1,
+                            name:  self.playerName,
                             score : 0   
                         },
                     },
@@ -119,28 +151,35 @@ export default {
                         $('#closebtn').click()
                     }
                 }).getKey();
-                //$('#exampleModal').modal('hide')
+                $('#exampleModal').modal('hide')
                 this.$store.dispatch('updatePlayerNum',1)
                 this.$store.dispatch('updateRoomId',self.currentRoom)
+                this.$store.dispatch('updatePlayerName',self.playerName)
                 self.$router.push('/loading')
             })
         },
-        joinRoom(roomid){
+        joinRoom(roomid){           
+            this.joinIdRoom=roomid 
+        },
+        joinProcess(){           
             let self=this
-            db.ref(`rooms/${roomid}/players/player2`).set({
+            self.playerName= self.nameplayer2 || 'Player2'
+            //console.log (self.playerName)
+            db.ref(`rooms/${self.joinIdRoom}/players/player2`).set({
                 answeredQ: 0,
-                name: self.nameplayer2,  
+                name: self.playerName,  
                 score : 0
             });
             this.$store.dispatch('updatePlayerNum',2)
-            this.$store.dispatch('updateRoomId',roomid)
-            self.$router.push(`/rooms/${roomid}/${self.$store.state.playerNum}`)
+            this.$store.dispatch('updateRoomId',self.joinIdRoom)
+            this.$store.dispatch('updatePlayerName',self.playerName)
+            self.$router.push(`/rooms/${self.joinIdRoom}/${self.$store.state.playerNum}`)
         }
     },
     created() {
         let self=this
         db.ref('rooms/').on('value', function(snapshot) {
-            console.log('--dari homepage',snapshot.val())
+            //console.log('--dari homepage',snapshot.val())
             self.roomlist.length=0
             snapshot.forEach(element => {
                 let {room}=element.val()

@@ -56,7 +56,6 @@
                         <input type="text" v-model="nameplayer1" class="form-control" placeholder="Player name">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="closebtn" data-dismiss="modal">Close</button>
                         <button @click="addRoom" type="button" class="btn btn-primary">Save changes</button>
                     </div>
 
@@ -81,7 +80,6 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button @click="joinProcess" type="button" class="btn btn-primary">Save changes</button>
 
                     </div>
@@ -310,7 +308,7 @@ body {
     font-family: Arial;
     font-size: 17px;
     background: white;
-    /* background: rgb(19, 30, 54); */
+    background: rgb(19, 30, 54);
     /* background: linear-gradient(135deg, rgba(244,103,169,1) 0%, rgba(176,105,247,1) 100%); */
     background-size: cover;
     background-repeat: no-repeat;

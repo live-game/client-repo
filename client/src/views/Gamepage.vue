@@ -1,25 +1,25 @@
 <template>
   <div>
-    <div v-if='loading'>
-      Loading . . .
+    <div v-if='loading' style="color: white">
+      <h2>Loading . . .</h2>
     </div>
     <div v-else>
       <div class="row">
         <div class="col-1"></div>
         <div class="col-5 text-left">
-          <h2>{{ me.name }}</h2>
-          <h4>{{ me.score }} / {{ me.answeredQ }}</h4>
+          <h2 style="color: white">{{ me.name }}</h2>
+          <h4 style="color: white">{{ me.score }} / {{ me.answeredQ }}</h4>
         </div>
         <div class="col-5 text-right">
-          <h2>{{ enemy.name }}</h2>
-          <h4>{{ enemy.score }} / {{ enemy.answeredQ }}</h4>
+          <h2 style="color: white">{{ enemy.name }}</h2>
+          <h4 style="color: white">{{ enemy.score }} / {{ enemy.answeredQ }}</h4>
         </div>
         <div class="col-1"></div>
       </div>
       <div class="row" style="margin-top: 30px" v-if='winner === -1 && qIndex < 5'>
         <div class="col-3"></div>
         <div class="col-6">
-          <h2>{{ questions[qIndex].question | decoder }}</h2>
+          <h2 style="color: white">{{ questions[qIndex].question | decoder }}</h2>
           <button class='answerButton' :style='{"background-color": answerColor[index]}' v-for="(answer, index) in questions[qIndex].answers" :key='index' @click='checkAnswer(index)'>{{ answer | decoder }}</button>
         </div>
         <div class="col-3"></div>
@@ -47,7 +47,7 @@ export default {
       playerNum: '',
       enemyNum: '',
       questions: [],
-      answerColor: ['black', 'black', 'black', 'black'],
+      answerColor: ['rgb(44, 118, 255)', 'rgb(44, 118, 255)', 'rgb(44, 118, 255)', 'rgb(44, 118, 255)'],
       me: {},
       enemy: {},
       qIndex: 0,
@@ -126,7 +126,7 @@ export default {
     },
     nextQ () {
       localStorage.setItem('qIndex', this.qIndex)
-      this.answerColor = ['black', 'black', 'black', 'black']
+      this.answerColor = ['rgb(44, 118, 255)', 'rgb(44, 118, 255)', 'rgb(44, 118, 255)', 'rgb(44, 118, 255)']
     }
   },
   filters: {

@@ -74,7 +74,7 @@ export default {
                 player:{ 
                     player1 : { 
                             answeredQ: 0,
-                            name: 'player2',
+                            name: 'player1',
                             score : 0   
                         },
                 },

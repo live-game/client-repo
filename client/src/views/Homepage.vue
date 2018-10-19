@@ -52,6 +52,7 @@
 <script>
 /* eslint-disable */
 import db from '../../googlekey.js'
+import { mapState } from 'vuex'
 
 export default {
     name: 'Homepage',
@@ -59,7 +60,10 @@ export default {
         return{
             roomlist:[],
             countPlayer:0,
-            roomName: ''
+            nameplayer1: 'player1',
+            nameplayer2: 'player2',
+            roomName: '',
+            currentRoom:''
         }
     },
     methods:{
@@ -70,11 +74,11 @@ export default {
         // },
         addRoom(){
             let self=this;
-            db.ref('rooms/').push({
-                player:{ 
+            self.currentRoom=db.ref('rooms/').push({
+                players:{ 
                     player1 : { 
                             answeredQ: 0,
-                            name: 'player1',
+                            name:  self.nameplayer1,
                             score : 0   
                         },
                 },
@@ -83,24 +87,31 @@ export default {
                 if(err)
                     console.log(err)
                 else{
+                    self.currentRoom=
                     $('#exampleModal').modal('hide')
-                    self.$router.push('/loading')
-                }
                     
-            })    
+                }                 
+            }).getKey();
+            this.$store.dispatch('updatePlayerNum',1)
+            this.$store.dispatch('updateRoomId',self.currentRoom)
+            self.$router.push('/loading')
+            //console.log(self.currentRoom)  
         },
         joinRoom(roomid){
-            db.ref(`rooms/${roomid}/player/player2`).set({
+            let self=this
+            db.ref(`rooms/${roomid}/players/player2`).set({
                 answeredQ: 0,
-                name: 'player2',  
-                score : 0                          
+                name: self.nameplayer2,  
+                score : 0      
             });
+            this.$store.dispatch('updatePlayerNum',2)
+            self.$router.push('/rooms')
         }
     },
     created() {
         let self=this
         db.ref('rooms/').on('value', function(snapshot) {
-            //console.log(snapshot.val())
+            console.log('--dari homepage',snapshot.val())
             self.roomlist.length=0
             snapshot.forEach(element => {
                 let {room}=element.val()
@@ -110,7 +121,6 @@ export default {
                 obj.detail = element.val()
                 self.roomlist.push(obj)               
             });
-            
         })
         
     }

@@ -22,8 +22,29 @@
 </template>
 
 <script>
+import db from '../../googlekey.js'
+import { mapState } from 'vuex'
+
 export default {
-    name: 'Loadpage'
+    name: 'Loadpage',
+    data(){
+        return{
+        }
+    },
+    methods:{
+     
+    },
+    created() {
+        console.log(this.$store.state.roomId)
+        let self=this
+        db.ref(`rooms/${this.$store.state.roomId}/players`).on('value', function(snapshot) {         
+            let players= snapshot.val()         
+            if(Object.keys(players).length >1){
+                console.log('masuk player 2')
+                self.$router.push('/rooms')
+            }
+        })       
+    }
 }
 </script>
 

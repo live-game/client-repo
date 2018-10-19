@@ -100,7 +100,7 @@ export default {
     created() {
         let self=this
         db.ref('rooms/').on('value', function(snapshot) {
-            //console.log(`jalan ${self.count ++}`)
+            //console.log(snapshot.val())
             self.roomlist.length=0
             snapshot.forEach(element => {
                 let {room}=element.val()

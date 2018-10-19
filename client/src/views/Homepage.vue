@@ -54,14 +54,17 @@
 /* eslint-disable */
 import db from '../../googlekey.js'
 import axios from 'axios'
-
+import { mapState } from 'vuex'
 export default {
     name: 'Homepage',
     data(){
         return{
             roomlist:[],
             countPlayer:0,
-            roomName: ''
+            nameplayer1: 'player1',
+            nameplayer2: 'player2',
+            roomName: '',
+            currentRoom:''
         }
     },
     methods:{
@@ -98,11 +101,11 @@ export default {
                     }
                     questions[`true${i}`] = correctIndex + 1
                 }
-                db.ref('rooms/').push({
+                self.currentRoom=db.ref('rooms/').push({
                     players: { 
                         player1 : { 
                             answeredQ: 0,
-                            name: 'player1',
+                            name:  self.nameplayer1,
                             score : 0   
                         },
                     },
@@ -111,25 +114,33 @@ export default {
                 }, function (err) {
                     if (err)
                         console.log(err)
-                    else {
-                        $('#exampleModal').modal('hide')
+                    else {                    
                         self.$router.push('/loading')
+                        $('#closebtn').click()
                     }
-                })
+                }).getKey();
+                //$('#exampleModal').modal('hide')
+                this.$store.dispatch('updatePlayerNum',1)
+                this.$store.dispatch('updateRoomId',self.currentRoom)
+                self.$router.push('/loading')
             })
         },
         joinRoom(roomid){
+            let self=this
             db.ref(`rooms/${roomid}/players/player2`).set({
                 answeredQ: 0,
-                name: 'player2',
+                name: self.nameplayer2,  
                 score : 0
             });
+            this.$store.dispatch('updatePlayerNum',2)
+            this.$store.dispatch('updateRoomId',roomid)
+            self.$router.push(`/rooms/${roomid}/${self.$store.state.playerNum}`)
         }
     },
     created() {
         let self=this
         db.ref('rooms/').on('value', function(snapshot) {
-            //console.log(snapshot.val())
+            console.log('--dari homepage',snapshot.val())
             self.roomlist.length=0
             snapshot.forEach(element => {
                 let {room}=element.val()
@@ -139,7 +150,6 @@ export default {
                 obj.detail = element.val()
                 self.roomlist.push(obj)               
             });
-            
         })
         
     }

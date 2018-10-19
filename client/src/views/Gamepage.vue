@@ -52,7 +52,8 @@ export default {
       enemy: {},
       qIndex: 0,
       winner: -1,
-      loading: true
+      loading: true,
+      afterClick: false
     }
   },
   methods: {
@@ -87,7 +88,10 @@ export default {
             this.winner = winner
           }, 1000)
         }
-        this.qIndex = snapshot.val()[`player${this.playerNum}`].answeredQ - 1
+        if (this.afterClick) {
+          this.qIndex = snapshot.val()[`player${this.playerNum}`].answeredQ - 1
+          this.afterClick = false
+        }
         setTimeout(() => {
           this.qIndex = snapshot.val()[`player${this.playerNum}`].answeredQ
         }, 1000)
@@ -95,6 +99,7 @@ export default {
     },
     checkAnswer (index) {
       db.ref(`rooms/${this.roomId}/`).once('value', (snapshot) => {
+        this.afterClick = true
         if (snapshot.val().questions[`true${this.qIndex + 1}`] === index + 1 && snapshot.val().players[`player${this.playerNum}`].answeredQ === this.qIndex) {
           db.ref(`rooms/${this.roomId}/players/player${this.playerNum}`).update({
             answeredQ: snapshot.val().players[`player${this.playerNum}`].answeredQ + 1,
